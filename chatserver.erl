@@ -1,5 +1,5 @@
 -module(chatserver).
--export([startserver/0]).
+-export([startserver/0, chatserver/1]).
 -export([login/1]).
 
 startserver() ->
@@ -12,10 +12,10 @@ chatserver(Chatter) ->
         {sender, message} ->
         	case string:equal(message, "login") of
         		true -> link(sender), chatserver([sender|Chatter]);
-        		false -> lists:foreach(fun(N) -> N ! {sender,message,false} end, Chatter), chatserver(Chatter)
+        		false -> lists:foreach(fun(N) -> N ! {sender, message, false} end, Chatter), chatserver(Chatter)
             end;
         {sender, receiver, personalMessage} ->
-        	receiver ! {sender, personalMessage,true},
+        	receiver ! {sender, personalMessage, true},
         	chatserver(Chatter);
         kill ->
             lists:foreach(fun(N) -> (unlink(N)) and (N ! terminate) end, Chatter),
