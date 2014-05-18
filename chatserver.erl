@@ -1,15 +1,19 @@
 -module(chatserver).
--export([chatserver/1]).
+-export([startserver/0]).
 -export([login/1]).
 
+startserver() ->
+    Pid = spawn(chatserver, chatserver, [[]]),
+    Pid.
 
 chatserver(Chatter) ->
     process_flag(trap_exit,true),
     receive
         {sender, message} ->
-        	if message
-        		equal(message, "login") -> link(sender), chatserver([sender|Chatter]);
-        		_ -> lists:foreach(fun(N) -> N ! {sender,message,false} end, Chatter), chatserver(Chatter);
+        	case string:equal(message, "login") of
+        		true -> link(sender), chatserver([sender|Chatter]);
+        		false -> lists:foreach(fun(N) -> N ! {sender,message,false} end, Chatter), chatserver(Chatter)
+            end;
         {sender, receiver, personalMessage} ->
         	receiver ! {sender, personalMessage,true},
         	chatserver(Chatter);
@@ -30,15 +34,15 @@ chatter() ->
     receive
         terminate ->
             io:format("~p terminates\n",[self()]);
-        {sender, message, personal} ->
-        	if personal
-        		false -> io:format("ALL: ~p\n",[message]);
-        		true -> io:format("~p: ~p\n",[sender, message]);
-        	chatter()
+        {sender, message, true} ->
+        	io:format("~p: ~p\n",[sender, message]),
+        	chatter();
+        {sender, message, false} ->
+            io:format("ALL: ~p\n",[message]),
+            chatter()
     end.
 
 login(Server) ->
-	Client = spawn(fun chatter/0)
-	Server ! {Client, login}
-	Client
-	end.
+	Client = spawn(fun chatter/0),
+	Server ! {Client, login},
+	Client.
