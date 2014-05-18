@@ -8,14 +8,16 @@ startserver() ->
     Pid.
 
 chatserver(Chatter) ->
-    process_flag(trap_exit,true),
+    process_flag(trap_exit, true),
     receive
         {sender, message} ->
+            io:format("personalMessage received"),
         	case string:equal(message, "login") of
         		true -> link(sender), chatserver([sender|Chatter]);
         		false -> lists:foreach(fun(N) -> N ! {sender, message, false} end, Chatter), chatserver(Chatter)
             end;
         {sender, receiver, personalMessage} ->
+            io:format("personalMessage received"),
         	receiver ! {sender, personalMessage, true},
         	chatserver(Chatter);
         kill ->
