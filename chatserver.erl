@@ -24,6 +24,7 @@ chatserver(Chatter) ->
             lists:foreach(fun(N) -> (unlink(N)) and (N ! terminate) end, Chatter),
             chatserver(Chatter);
         terminate ->
+            io:format("server terminates\n"),
             lists:foreach(fun(N) -> (unlink(N)) and (N ! terminate) end, Chatter);
         {'EXIT',From,Reason} ->
             unlink(From),
