@@ -2,7 +2,7 @@
 -export([startserver/0, chatserver/1]).
 -export([login/1]).
 
-% start by variable_name = spawn(fun chatserver:startserver/0).
+% start by variable_name = chatserver:startserver().
 startserver() ->
     Pid = spawn(chatserver, chatserver, [[]]),
     Pid.
