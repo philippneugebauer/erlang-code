@@ -10,15 +10,14 @@ startserver() ->
 chatserver(Chatter) ->
     process_flag(trap_exit, true),
     receive
-        {sender, message} ->
-            io:format("message received\n"),
-        	case string:equal(message, "login") of
-        		true -> link(sender), chatserver([sender|Chatter]);
-        		false -> lists:foreach(fun(N) -> N ! {sender, message, false} end, Chatter), chatserver(Chatter)
+        {Sender, Message} ->
+        	case string:equal(Message, "login") of
+        		true -> io:format("loginmessage received\n"), link(Sender), chatserver([Sender|Chatter]);
+        		false -> io:format("message received\n"), lists:foreach(fun(N) -> N ! {Sender, Message, false} end, Chatter), chatserver(Chatter)
             end;
-        {sender, receiver, personalMessage} ->
+        {Sender, Receiver, PersonalMessage} ->
             io:format("personalMessage received\n"),
-        	receiver ! {sender, personalMessage, true},
+        	Receiver ! {Sender, PersonalMessage, true},
         	chatserver(Chatter);
         kill ->
             lists:foreach(fun(N) -> (unlink(N)) and (N ! terminate) end, Chatter),
@@ -38,17 +37,17 @@ chatter() ->
     receive
         terminate ->
             io:format("~p terminates\n",[self()]);
-        {sender, message, true} ->
-        	io:format("~p: ~p\n",[sender, message]),
+        {Sender, Message, true} ->
+        	io:format("~p: ~p\n",[Sender, Message]),
         	chatter();
-        {sender, message, false} ->
-            io:format("ALL: ~p\n",[message]),
+        {Sender, Message, false} ->
+            io:format("ALL: ~p\n",[Message]),
             chatter()
     end.
 
 login(Server) ->
 	Client = spawn(fun chatter/0),
-	Server ! {Client, login},
+	Server ! {Client, "login"},
 	Client.
 
 logout(Client) ->
