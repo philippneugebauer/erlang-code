@@ -49,3 +49,7 @@ login(Server) ->
 	Client = spawn(fun chatter/0),
 	Server ! {Client, login},
 	Client.
+
+logout(Client) ->
+    Client ! terminate.
+    
