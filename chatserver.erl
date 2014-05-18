@@ -11,13 +11,13 @@ chatserver(Chatter) ->
     process_flag(trap_exit, true),
     receive
         {sender, message} ->
-            io:format("personalMessage received"),
+            io:format("message received\n"),
         	case string:equal(message, "login") of
         		true -> link(sender), chatserver([sender|Chatter]);
         		false -> lists:foreach(fun(N) -> N ! {sender, message, false} end, Chatter), chatserver(Chatter)
             end;
         {sender, receiver, personalMessage} ->
-            io:format("personalMessage received"),
+            io:format("personalMessage received\n"),
         	receiver ! {sender, personalMessage, true},
         	chatserver(Chatter);
         kill ->
