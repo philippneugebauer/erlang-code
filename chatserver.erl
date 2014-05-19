@@ -2,6 +2,9 @@
 -export([startserver/0, chatserver/1]).
 -export([login/2]).
 -export([logout/1]).
+-export([sendMessage/3]).
+-export([sendPrivateMessage/4]).
+
 
 % start by variable_name = chatserver:startserver().
 startserver() ->
@@ -74,5 +77,12 @@ login(Server, Name) ->
 
 logout(Client) ->
     Client ! terminate.
+
+sendMessage(Server, Client, Message) ->
+    Server ! {Client, Message}.
+
+sendPrivateMessage(Server, Client, Receiver, Message) ->
+    Server ! {Client, Receiver, Message}.
+
 
     
