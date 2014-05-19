@@ -13,8 +13,9 @@ chatserver(Chatter) ->
     receive
         {Sender, Message} ->
             io:format("message received\n"),
-            [ChatPerson|_] = lists:filter(fun({I,Name}) -> Sender == I end, Chatter),
-            lists:foreach(fun({Id,N}) -> Id ! {ChatPerson, Message, false} end, Chatter), 
+            [ChatPerson|_] = lists:filter(fun({I,_}) -> Sender == I end, Chatter),
+            {_, ChatName} = ChatPerson,
+            lists:foreach(fun({Id,_}) -> Id ! {ChatName, Message, false} end, Chatter), 
             chatserver(Chatter);
         {Sender, Name, login} ->
             io:format("loginmessage received\n"), 
@@ -27,7 +28,9 @@ chatserver(Chatter) ->
             chatserver(Chatter);
         {Sender, Receiver, PersonalMessage} ->
             io:format("personalMessage received\n"),
-        	Receiver ! {Sender, PersonalMessage, true},
+            [ChatPerson|_] = lists:filter(fun({I,_}) -> Sender == I end, Chatter),
+            {_, ChatName} = ChatPerson,
+        	Receiver ! {ChatName, PersonalMessage, true},
         	chatserver(Chatter);
         kick ->
             io:format("server kicked all clients\n"),
