@@ -11,8 +11,9 @@ chatserver(Chatter) ->
     process_flag(trap_exit, true),
     receive
         {Sender, Message} ->
-            io:format("message received\n"), 
-            lists:foreach(fun({Id,N}) -> Id ! {lists:filter(fun({I,Name}) -> Sender == I end, Chatter), Message, false} end, Chatter), 
+            io:format("message received\n"),
+            [ChatPerson|_] = lists:filter(fun({I,Name}) -> Sender == I end, Chatter),
+            lists:foreach(fun({Id,N}) -> Id ! {ChatPerson, Message, false} end, Chatter), 
             chatserver(Chatter);
         {Sender, Name, login} ->
             io:format("loginmessage received\n"), 
