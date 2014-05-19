@@ -18,9 +18,12 @@ chatserver(Chatter) ->
             lists:foreach(fun({Id,_}) -> Id ! {ChatName, Message, false} end, Chatter), 
             chatserver(Chatter);
         {Sender, Name, login} ->
-            io:format("loginmessage received\n"), 
-            link(Sender), 
-            chatserver([{Sender, Name}|Chatter]);
+            io:format("loginmessage received\n"),
+            ChatPersons = lists:filter(fun({_,ChatName}) -> Name == ChatName end, Chatter),
+            case isEmpty(ChatPersons) of
+                false -> Sender ! duplicate, chatserver(Chatter);
+                true -> Sender ! success, link(Sender), chatserver([{Sender, Name}|Chatter])
+            end;
         {'EXIT',From,Reason} ->
             io:format("client ~p stopped\n", [From]),
             unlink(From),
@@ -43,8 +46,17 @@ chatserver(Chatter) ->
             chatserver(Chatter)
     end.
 
+isEmpty([]) -> true;
+isEmpty(_) -> false.
+
+
 chatter() ->
     receive
+        duplicate ->
+            io:format("name is already used, process terminated\n");
+        success -> 
+            io:format("login successful\n"),
+            chatter();
         terminate ->
             io:format("~p terminates\n",[self()]);
         {Sender, Message, true} ->
@@ -55,7 +67,6 @@ chatter() ->
             chatter()
     end.
 
-%TODO: unique names
 login(Server, Name) ->
 	Client = spawn(fun chatter/0),
 	Server ! {Client, Name, login},
