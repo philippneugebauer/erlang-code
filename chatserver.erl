@@ -41,7 +41,7 @@ chatserver(Chatter) ->
         kick ->
             io:format("server kicked all clients\n"),
             lists:foreach(fun({Id,_}) -> (unlink(Id)) and (Id ! terminate) end, Chatter),
-            chatserver(Chatter);
+            chatserver([]);
         terminate ->
             io:format("server terminates\n"),
             lists:foreach(fun({Id,_}) -> (unlink(Id)) and (Id ! terminate) end, Chatter);
