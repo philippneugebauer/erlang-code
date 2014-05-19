@@ -55,6 +55,7 @@ chatter() ->
             chatter()
     end.
 
+%TODO: unique names
 login(Server, Name) ->
 	Client = spawn(fun chatter/0),
 	Server ! {Client, Name, login},
