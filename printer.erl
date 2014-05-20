@@ -20,7 +20,6 @@ print() ->
         print()
     end.
 
-% b
 % sendback and sendandreceivemessage are for communicating
 % start a process with sendback and another with sendandreceivemessage
 % Pid = spawn(fun printer:sendback/0).
@@ -41,8 +40,6 @@ sendandreceivemessage(To, Message) ->
         X -> io:format("~p\n",[X])
     end.
     
-% c
-
 sendbacknew() ->
     receive
         {Pid, X} -> Pid ! fac(X),
@@ -51,8 +48,6 @@ sendbacknew() ->
     
 fac(0) -> 1;
 fac(N) -> N * fac(N-1).
-
-% d
 
 % start server:
 % register(facsrv,spawn(fun printer:sendbacknew/0)).
