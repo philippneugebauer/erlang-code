@@ -1,15 +1,11 @@
 -module(chatserver).
 -export([startserver/0, chatserver/1]).
--export([login/2]).
--export([logout/1]).
--export([sendMessage/3]).
--export([sendPrivateMessage/4]).
 
 
-% start by variable_name = chatserver:startserver().
+% start by chatserver:startserver().
+% send messages by server ! {message}.
 startserver() ->
-    Pid = spawn(chatserver, chatserver, [[]]),
-    Pid.
+    register(server, spawn(chatserver, chatserver, [[]])).
 
 chatserver(Chatter) ->
     process_flag(trap_exit, true),
@@ -51,38 +47,4 @@ chatserver(Chatter) ->
 
 isEmpty([]) -> true;
 isEmpty(_) -> false.
-
-
-chatter() ->
-    receive
-        duplicate ->
-            io:format("name is already used, process terminated\n");
-        success -> 
-            io:format("login successful\n"),
-            chatter();
-        terminate ->
-            io:format("~p terminates\n",[self()]);
-        {Sender, Message, true} ->
-        	io:format("~p to you: ~p\n",[Sender, Message]),
-        	chatter();
-        {Sender, Message, false} ->
-            io:format("~p to ALL: ~p\n",[Sender, Message]),
-            chatter()
-    end.
-
-login(Server, Name) ->
-	Client = spawn(fun chatter/0),
-	Server ! {Client, Name, login},
-	Client.
-
-logout(Client) ->
-    Client ! terminate.
-
-sendMessage(Server, Client, Message) ->
-    Server ! {Client, Message}.
-
-sendPrivateMessage(Server, Client, Receiver, Message) ->
-    Server ! {Client, Receiver, Message}.
-
-
-    
+   
