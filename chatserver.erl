@@ -14,6 +14,7 @@ chatserver(Chatter) ->
         {Sender, Message} ->
             io:format("message received\n"),
             [ChatPerson|_] = lists:filter(fun({I,_}) -> Sender == I end, Chatter),
+            % TODO: chatperson is not registered
             {_, ChatName} = ChatPerson,
             lists:foreach(fun({Id,_}) -> Id ! {ChatName, Message, false} end, Chatter), 
             chatserver(Chatter);
@@ -32,8 +33,11 @@ chatserver(Chatter) ->
         {Sender, Receiver, PersonalMessage} ->
             io:format("personalMessage received\n"),
             [ChatPerson|_] = lists:filter(fun({I,_}) -> Sender == I end, Chatter),
+            % TODO: chatperson is not registered
             {_, ChatName} = ChatPerson,
-        	Receiver ! {ChatName, PersonalMessage, true},
+            [ReceiverTuple|_] = lists:filter(fun({_,N}) -> N == Receiver end, Chatter),
+            {Id, _} = ReceiverTuple,
+        	Id ! {ChatName, PersonalMessage, true},
         	chatserver(Chatter);
         kick ->
             io:format("server kicked all clients\n"),

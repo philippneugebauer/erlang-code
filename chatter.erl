@@ -7,6 +7,7 @@
 % for remote start console by erl -name x
 
 chatter() ->
+    %TODO: server crashes
     receive
         duplicate ->
             io:format("name is already used, process terminated\n");
@@ -43,4 +44,5 @@ send_message(Server, Client, Message) ->
     Server ! {Client, Message}.
 
 send_private_message(Server, Client, Receiver, Message) ->
+    io:format("you to ~p: ~p\n",[Receiver, Message]),
     Server ! {Client, Receiver, Message}.
