@@ -1,5 +1,5 @@
 -module(chatter).
--export([login/2, remote_login/3, create_remote_server_tuple/2]).
+-export([login/2, remote_login/2, create_remote_server_tuple/2]).
 -export([logout/1]).
 -export([send_message/3]).
 -export([send_private_message/4]).
@@ -34,7 +34,8 @@ login(Server, Name) ->
 	Server ! {Client, Name, login},
 	Client.
 
-remote_login(ServerTuple, ServerName, Name) ->
+remote_login(ServerTuple, Name) ->
+    {ServerName, _} = ServerTuple, 
     net_adm:ping(ServerName),
     login(ServerTuple, Name).
 
