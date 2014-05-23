@@ -59,14 +59,13 @@ chatserver(Chatter) ->
                 true -> Sender ! register
             end,
         	chatserver(Chatter);
-        %TODO: does it work properly?
         kick ->
             io:format("server kicked all clients\n"),
-            lists:foreach(fun({Id,_}) -> (unlink(Id)) and (Id ! terminate) end, Chatter),
+            lists:foreach(fun({Id,_}) -> unlink(Id), Id ! terminate end, Chatter),
             chatserver([]);
         terminate ->
             io:format("server terminates\n"),
-            lists:foreach(fun({Id,_}) -> (unlink(Id)) and (Id ! terminate) end, Chatter);
+            lists:foreach(fun({Id,_}) -> unlink(Id), Id ! terminate end, Chatter);
         _ ->
             chatserver(Chatter)
     end.
