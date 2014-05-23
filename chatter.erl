@@ -4,6 +4,8 @@
 -export([send_message/3]).
 -export([send_private_message/4]).
 
+% for remote start console by erl -name x
+
 chatter() ->
     receive
         duplicate ->
@@ -30,6 +32,7 @@ remote_login(ServerTuple, ServerName, Name) ->
     net_adm:ping(ServerName),
     login(ServerTuple, Name).
 
+% parameters are e.g. ('server@flp-pc.fritz.box', server).
 create_remote_server_tuple(ServerNode, ServerName) ->
     {ServerName, ServerNode}.
 

@@ -4,6 +4,7 @@
 
 % start by chatserver:startserver().
 % send messages by server ! {message}.
+% for remote start console by erl -name x
 startserver() ->
     register(server, spawn(chatserver, chatserver, [[]])).
 
