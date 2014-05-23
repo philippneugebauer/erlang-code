@@ -11,11 +11,16 @@ chatter() ->
     receive
         duplicate ->
             io:format("name is already used, process terminated\n");
+        register ->
+            io:format("login before chatting\n");
         success -> 
             io:format("login successful\n"),
             chatter();
         terminate ->
             io:format("~p terminates\n",[self()]);
+        receiver_not_exists ->
+            io:format("unkown receiver\n"),
+            chatter();
         {Sender, Message, true} ->
         	io:format("~p to you: ~p\n",[Sender, Message]),
         	chatter();
