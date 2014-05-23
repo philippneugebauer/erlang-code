@@ -7,7 +7,6 @@
 % for remote start console by erl -name x
 
 chatter() ->
-    %TODO: server crashes
     receive
         duplicate ->
             io:format("name is already used, process terminated\n");

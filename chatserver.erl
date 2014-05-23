@@ -8,7 +8,6 @@
 startserver() ->
     register(server, spawn(chatserver, chatserver, [[]])).
 
-%TODO: restart actual_process in case of error
 chatserver(Chatter) ->
     process_flag(trap_exit, true),
     receive
@@ -35,7 +34,6 @@ chatserver(Chatter) ->
                     link(Sender), 
                     chatserver([{Sender, Name}|Chatter])
             end;
-        %TODO: does it work really for stopping?
         {'EXIT',From,Reason} ->
             io:format("client ~p stopped\n", [From]),
             unlink(From),
