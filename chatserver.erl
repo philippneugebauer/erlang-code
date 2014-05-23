@@ -72,5 +72,5 @@ chatserver(Chatter) ->
     end.
 
 isEmpty([]) -> true;
-isEmpty(_) -> false.
+isEmpty([_|_]) -> false.
    
