@@ -8,23 +8,34 @@
 startserver() ->
     register(server, spawn(chatserver, chatserver, [[]])).
 
+%TODO: restart actual_process in case of error
 chatserver(Chatter) ->
     process_flag(trap_exit, true),
     receive
         {Sender, Message} ->
             io:format("message received\n"),
-            [ChatPerson|_] = lists:filter(fun({I,_}) -> Sender == I end, Chatter),
-            % TODO: chatperson is not registered
-            {_, ChatName} = ChatPerson,
-            lists:foreach(fun({Id,_}) -> Id ! {ChatName, Message, false} end, Chatter), 
+            ChatList = lists:filter(fun({I,_}) -> Sender == I end, Chatter),
+            case isEmpty(ChatList) of
+                false ->
+                    [ChatPerson|_] = ChatList,
+                    {_, ChatName} = ChatPerson,
+                    lists:foreach(fun({Id,_}) -> Id ! {ChatName, Message, false} end, Chatter);
+                true -> Sender ! register
+            end,
             chatserver(Chatter);
         {Sender, Name, login} ->
             io:format("loginmessage received\n"),
             ChatPersons = lists:filter(fun({_,ChatName}) -> Name == ChatName end, Chatter),
             case isEmpty(ChatPersons) of
-                false -> Sender ! duplicate, chatserver(Chatter);
-                true -> Sender ! success, link(Sender), chatserver([{Sender, Name}|Chatter])
+                false -> 
+                    Sender ! duplicate, 
+                    chatserver(Chatter);
+                true -> 
+                    Sender ! success, 
+                    link(Sender), 
+                    chatserver([{Sender, Name}|Chatter])
             end;
+        %TODO: does it work really for stopping?
         {'EXIT',From,Reason} ->
             io:format("client ~p stopped\n", [From]),
             unlink(From),
