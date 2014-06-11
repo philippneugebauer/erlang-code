@@ -16,6 +16,7 @@ computer() ->
 	Computer = computer_choice(),
 	receive
 		{Sender, Choice} ->	evaluate(Sender, Computer, Choice), computer();
+		upgrade -> code:purge(?MODULE), compile:file(?MODULE), code:load_file(?MODULE), ?MODULE:computer();
 		terminate -> io:format("server stopped\n")
 	end.
 
