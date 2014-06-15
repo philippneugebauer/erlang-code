@@ -29,9 +29,13 @@ chatter() ->
     end.
 
 login(Server, Name) ->
-	Client = spawn_link(fun chatter/0),
-	Server ! {Client, Name, login},
-	Client.
+    Client = spawn_link(fun chatter/0),
+    try Server ! {Client, Name, login} of
+        _ -> Client
+    catch
+        error:Reason ->
+            io:fwrite("Error reason: ~p~n", [Reason])
+    end.
 
 remote_login(ServerTuple, Name) ->
     {_, ServerNode} = ServerTuple, 
