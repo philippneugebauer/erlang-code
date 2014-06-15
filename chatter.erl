@@ -34,8 +34,8 @@ login(Server, Name) ->
 	Client.
 
 remote_login(ServerTuple, Name) ->
-    {ServerName, _} = ServerTuple, 
-    net_adm:ping(ServerName),
+    {_, ServerNode} = ServerTuple, 
+    net_adm:ping(ServerNode),
     login(ServerTuple, Name).
 
 % parameters are e.g. ('server@flp-pc.fritz.box', server).
