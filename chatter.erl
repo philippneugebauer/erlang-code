@@ -29,7 +29,7 @@ chatter() ->
     end.
 
 login(Server, Name) ->
-	Client = spawn(fun chatter/0),
+	Client = spawn_link(fun chatter/0),
 	Server ! {Client, Name, login},
 	Client.
 
