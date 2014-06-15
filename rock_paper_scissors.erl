@@ -2,11 +2,17 @@
 -export([play/1, startserver/0]).
 
 play(Choice) ->
-	computer ! {self(), Choice},
-	receive
-		invalid -> io:format("invalid choice sent\n");
-		Message -> io:format("~p\n",[Message])
+	try (computer ! {self(), Choice}) of
+		_ -> 
+			receive 
+				invalid -> io:format("invalid choice sent\n"); 
+				Message -> io:format("~p\n",[Message]) 
+			end
+	catch
+	    Error:Reason ->
+	        io:fwrite("Error reason: ~p~n", [Reason])
 	end.
+
 
 startserver() ->
 	register(computer, spawn(fun computer/0)).
