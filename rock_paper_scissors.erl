@@ -9,7 +9,7 @@ play(Choice) ->
 				Message -> io:format("~p\n",[Message]) 
 			end
 	catch
-	    Error:Reason ->
+	    error:Reason ->
 	        io:fwrite("Error reason: ~p~n", [Reason])
 	end.
 
