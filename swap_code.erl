@@ -1,23 +1,23 @@
 -module(swap_code).
--export([startserver/0, swap/0, swap2/0]).
+-export([startserver/0, loop/1, print/1, print2/1]).
 
 
 startserver() ->
-    register(server, spawn(swap_code, swap, [])).
+    register(server, spawn(swap_code, loop, [fun print/1])).
 
-swap() ->
+% code upgrade with server ! {upgrade, fun swap_code:print2/1}.
+loop(Function) ->
 	receive
-		upgrade -> 
-		    code:purge(?MODULE),
-            compile:file(?MODULE),
-            code:load_file(?MODULE),
-			?MODULE:swap2();
-		Message -> 
-			io:format("~p\n",[Message]), swap()
+		{upgrade, F} ->
+			loop(F);
+		Message ->
+			Function(Message),
+			loop(Function)
 	end.
 
-swap2() -> 
-	receive
-		Message -> 
-			io:format("upgraded swap: ~p\n",[Message]), swap()
-	end.
+
+print(Message) ->
+	io:format("print: ~p\n",[Message]).
+
+print2(Message) ->
+	io:format("print2: ~p\n",[Message]).
