@@ -1,5 +1,5 @@
 -module(swap_code).
--export([startserver/0, loop/1, print/1, print2/1]).
+-export([startserver/0, print/1, print2/1]).
 
 
 startserver() ->
