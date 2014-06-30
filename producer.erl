@@ -1,23 +1,23 @@
 -module(producer).
--export([send/2]).
+-export([start/0, producer_send/1]).
 
 start() -> 
- 	register(producer,spawn(fun send/0)).
+ 	register(producer, spawn(fun send/0)),
+ 	producer ! start.
 
 send() ->
     process_flag(trap_exit, true),
-	receive ->
+    receive
 		start -> 
-			Consumer = spawn_link(fun consumer:receive/0),
- 			register(consumer, Consumer),
+ 			register(consumer, spawn_link(fun consumer:accept/0)),
  			send();
-		Number ->
-			consumer ! Number,
-			send();
-		{'EXIT',From,Reason} ->
+ 		{'EXIT',From,Reason} ->
             unlink(consumer),
             self() ! start,
             send();
+		Number ->
+			consumer ! Number,
+			send();
 		_ -> 
 			send()
 	end.

@@ -1,11 +1,11 @@
 -module(consumer).
--export([receive/0]).
+-export([accept/0]).
 
-receive() ->
+accept() ->
 	receive
 		Number ->
-			io:format("~p",[Number]), 
-			receive();
-		_ -> receive()
+			io:format("received: ~p\n",[Number]), 
+			accept();
+		_ -> accept()
 	end.
 
