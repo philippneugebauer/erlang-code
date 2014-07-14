@@ -14,9 +14,12 @@
 % send messages:
 % Pid ! message.
 
+send(Pid, Text) ->
+    Pid ! Text.
+
 print() ->
     receive
-        X -> X,
+        X -> io:format(“~p”,[X])
         print()
     end.
 
