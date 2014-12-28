@@ -57,3 +57,4 @@ send_message(Server, Client, Message) ->
 send_private_message(Server, Client, Receiver, Message) ->
     io:format("you to ~p: ~p\n",[Receiver, Message]),
     Server ! {Client, Receiver, Message}.
+

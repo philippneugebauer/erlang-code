@@ -58,3 +58,4 @@ computer_choice() ->
 	I = random:uniform(3),
 	Choices = ['Stein', 'Schere', 'Papier'],
 	lists:nth(I, Choices).
+

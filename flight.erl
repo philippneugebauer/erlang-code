@@ -28,4 +28,3 @@ fromto(A,B,L) -> lists:filter(fun({F,T,N,D}) -> (T == B) and (F == A) end, L).
 
 fromon(A,D,L) -> lists:map(fun({F,T,N,Day}) -> T end, lists:filter(fun({F2,T2,N2,Day2}) -> (F2 == A) and (lists:filter(fun(T) -> T == D end, Day2) /= []) end, L)).
 
-

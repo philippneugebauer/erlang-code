@@ -23,3 +23,4 @@ print(Message) ->
 
 print2(Message) ->
 	io:format("print2: ~p\n",[Message]).
+

@@ -38,3 +38,4 @@ slave() ->
             io:format("~p: ~p\n",[self(), X]),
             slave()
     end.
+

@@ -26,3 +26,4 @@ send() ->
 
 producer_send(Number) ->
 	producer ! Number.
+
