@@ -1,3 +1,5 @@
+% The MIT License (MIT)
+% Copyright (c) 2014 Philipp Neugebauer
 -module(swap_code).
 -export([startserver/0, print/1, print2/1]).
 

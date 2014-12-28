@@ -1,3 +1,5 @@
+% The MIT License (MIT)
+% Copyright (c) 2014 Philipp Neugebauer
 -module(consumer).
 -export([accept/0]).
 

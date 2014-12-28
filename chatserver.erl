@@ -1,3 +1,5 @@
+% The MIT License (MIT)
+% Copyright (c) 2014 Philipp Neugebauer
 -module(chatserver).
 -export([startserver/0, chatserver/1]).
 

@@ -1,3 +1,5 @@
+% The MIT License (MIT)
+% Copyright (c) 2014 Philipp Neugebauer
 -module('rock_paper_scissors').
 -export([play/1, startserver/0]).
 

@@ -1,3 +1,5 @@
+% The MIT License (MIT)
+% Copyright (c) 2014 Philipp Neugebauer
 -module(printer).
 -export([print/0]).
 -export([sendback/0]).

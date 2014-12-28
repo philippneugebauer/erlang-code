@@ -1,3 +1,5 @@
+% The MIT License (MIT)
+% Copyright (c) 2014 Philipp Neugebauer
 -module(chatter).
 -export([login/2, remote_login/2, create_remote_server_tuple/2]).
 -export([logout/1]).
